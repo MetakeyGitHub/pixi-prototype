@@ -313,34 +313,33 @@ export class Scene {
       ease: 'sine.inOut',
     });
 
-    // Intro timeline
+    // Intro timeline. gsap.set is used for the initial state so it always
+    // applies even if some property assignment was racing layout(). A
+    // setTimeout/onComplete fallback then guarantees the hero is visible.
     this.masterTimeline?.kill();
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => this.snapVisible(),
+    });
     this.masterTimeline = tl;
 
-    // Reset alphas/positions
-    this.logo.alpha = 0;
     const logoTargetY = this.logo.y;
-    this.logo.y = logoTargetY + 24;
 
-    this.heroBlock.subtitle.alpha = 0;
-    this.heroBlock.subtitle.x -= 24;
-    this.heroBlock.body.alpha = 0;
-    this.heroBlock.body.x -= 24;
-    this.heroBlock.primary.alpha = 0;
-    this.heroBlock.primary.scale.set(0.85);
-    this.heroBlock.secondary.alpha = 0;
-    this.heroBlock.secondary.scale.set(0.85);
-
+    gsap.set(this.logo, { alpha: 0, y: logoTargetY + 24 });
+    gsap.set(this.heroBlock.subtitle, { alpha: 0, x: this.heroBlock.subtitle.x - 24 });
+    gsap.set(this.heroBlock.body, { alpha: 0, x: this.heroBlock.body.x - 24 });
+    gsap.set(this.heroBlock.primary, { alpha: 0 });
+    gsap.set(this.heroBlock.primary.scale, { x: 0.85, y: 0.85 });
+    gsap.set(this.heroBlock.secondary, { alpha: 0 });
+    gsap.set(this.heroBlock.secondary.scale, { x: 0.85, y: 0.85 });
     if (this.navContainer) {
-      this.navContainer.alpha = 0;
-      this.navContainer.y -= 14;
+      gsap.set(this.navContainer, { alpha: 0, y: this.navContainer.y - 14 });
       tl.to(
         this.navContainer,
         { alpha: 1, y: '+=14', duration: 0.5, ease: 'power2.out' },
         0,
       );
     }
+
     tl.to(this.logo, { alpha: 1, y: logoTargetY, duration: 0.7, ease: 'back.out(1.5)' }, 0.1);
     tl.to(
       this.heroBlock.subtitle,
@@ -364,6 +363,22 @@ export class Scene {
       { x: 1, y: 1, duration: 0.5, ease: 'back.out(2)' },
       1.05,
     );
+
+    // Belt-and-braces fallback in case the timeline gets killed by a resize
+    // before it can finish.
+    setTimeout(() => this.snapVisible(), 2200);
+  }
+
+  /** Force every animated UI element to its visible end-state. */
+  private snapVisible() {
+    this.logo.alpha = 1;
+    this.heroBlock.subtitle.alpha = 1;
+    this.heroBlock.body.alpha = 1;
+    this.heroBlock.primary.alpha = 1;
+    this.heroBlock.primary.scale.set(1);
+    this.heroBlock.secondary.alpha = 1;
+    this.heroBlock.secondary.scale.set(1);
+    if (this.navContainer) this.navContainer.alpha = 1;
   }
 
   private tick = () => {
