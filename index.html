@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23e84c6a'/><text x='50%25' y='62%25' font-family='monospace' font-size='18' font-weight='bold' text-anchor='middle' fill='white'>P</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A retro pixel-art recreation of the PixiJS landing page, rendered entirely in WebGL/WebGPU with PixiJS v8 + GSAP." />
+    <title>PixiJS — The HTML5 Creation Engine</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0c0814;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      #app {
+        position: fixed;
+        inset: 0;
+      }
+      canvas {
+        display: block;
+      }
+      .credit {
+        position: fixed;
+        bottom: 10px;
+        right: 14px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.45);
+        z-index: 5;
+        letter-spacing: 0.04em;
+        pointer-events: none;
+        font-family: 'Courier New', monospace;
+      }
+      .credit a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div class="credit">
+      Inspired by
+      <a href="https://x.com/pixijs/status/2047737475175686256" target="_blank" rel="noopener">@PixiJS</a>
+      · Built with PixiJS v8 + GSAP
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
